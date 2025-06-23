@@ -1,12 +1,53 @@
 {% extends "citations/base.html" %}
 
 {% block content %}
-  <div style="text-align:center; margin-top: 50px;">
+  <div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded-xl shadow">
     {% if citation %}
-      <blockquote style="font-size: 1.5em; font-style: italic;">
-        "{{ citation.citation }}"
-        <footer>— {{ citation.auteur.nom }} ({{ citation.theme.name }})</footer>
+      <blockquote class="text-xl italic text-gray-800 mb-4">
+        “{{ citation.citation }}”
       </blockquote>
+      <p class="text-right font-semibold text-indigo-600 mb-6">
+        — {{ citation.auteur.nom }} ({{ citation.theme.name }})
+      </p>
+
+      <hr class="my-4">
+      {% if user.is_authenticated %}
+        <h3 class="text-lg font-bold mb-2">Ajouter un commentaire</h3>
+        <form method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="mt-2 bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+            Ajouter
+          </button>
+        </form>
+      {% else %}
+        <p class="text-center mt-6 text-gray-600">
+          🔒 <a href="{% url 'login' %}" class="text-indigo-600 underline">Connecte-toi</a> pour ajouter un commentaire.
+        </p>
+      {% endif %}
+
+      {% if commentaires %}
+        <h4 class="mt-6 font-semibold">Commentaires :</h4>
+       <ul class="mt-2 space-y-2">
+        {% for c in commentaires %}
+          <li class="p-3 border rounded bg-gray-50">
+            {{ c.contenue }}<br>
+            <span class="text-sm text-gray-500">
+              —
+              {% if c.user %}
+                {{ c.user.username }}
+              {% else %}
+                Anonyme
+              {% endif %}
+            </span>
+          </li>
+        {% empty %}
+          <li>Aucun commentaire pour cette citation.</li>
+        {% endfor %}
+      </ul>
+
+      {% endif %}
+
     {% else %}
       <p>Aucune citation disponible.</p>
     {% endif %}

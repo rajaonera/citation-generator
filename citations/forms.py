@@ -1,5 +1,5 @@
 from django import forms
-from .models import Citation,Auteur,Theme
+from .models import Citation,Auteur,Theme,Commentaire
 
 class CitationForm(forms.ModelForm):
     class Meta:
@@ -36,5 +36,17 @@ class ThemeForm(forms.ModelForm):
                 'class': 'w-full p-2 border rounded',
                 'rows': 3,
                 'placeholder': 'Tapez votre theme ici...'
+            }),
+        }
+
+class CommentaireForm(forms.ModelForm):
+    class Meta:
+        model = Commentaire
+        fields = ['contenue']
+        widgets = {
+            'contenue': forms.Textarea(attrs={
+                'class': 'w-full p-2 border rounded',
+                'rows': 3,
+                'placeholder': 'Tapez votre commentaire ici...'
             }),
         }
